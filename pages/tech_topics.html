@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Topics Cafe☕ - わたしの技術ノート -</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <style>
+    body {
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+    }
+    .transition-all {
+      transition-property: all;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 200ms;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    /* ヘッダーテキストのシャドウ */
+    .text-shadow-soft {
+      text-shadow: 0px 2px 6px rgba(5, 5, 5, 0.244); /* ぼかしを強く、透明度を優しく */
+    }
+    /* カスタムカテゴリメニューのスタイル */
+    .category-menu-container {
+      position: relative;
+      display: inline-block;
+    }
+    .category-menu-button {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px; /* pill shape */
+      font-weight: 500;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .category-menu-button:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    .category-menu-popup {
+      position: absolute;
+      top: calc(100% + 0.5rem); /* ボタンの下に表示 */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 180px; /* メニューの最小幅 */
+    }
+    .category-menu-popup button {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    .category-menu-popup button:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    /* 新しいメニューのスタイル */
+    .icon-menu-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; /* iOSでのスムーズスクロール */
+      scrollbar-width: none; /* Firefoxのスクロールバーを非表示 */
+      -ms-overflow-style: none;  /* IE/Edgeのスクロールバーを非表示 */
+    }
+    .icon-menu-container::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Operaのスクロールバーを非表示 */
+    }
+    .icon-menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease-out; /* トランジションをゆっくりに */
+      flex-shrink: 0; /* アイテムが縮まないように */
+    }
+    .icon-menu-item:hover {
+      transform: translateY(-3px); /* ホバーで少し浮き上がる */
+    }
+    .icon-menu-item i {
+      font-size: 2rem; /* アイコンのサイズを小さく */
+      transition: color 0.3s; /* トランジションをゆっくりに */
+    }
+    .icon-menu-item span {
+      font-size: 0.75rem; /* 文字のサイズ */
+      color: #6b7280; /* デフォルトの文字色を優しく (gray-500) */
+      margin-top: 0.25rem;
+      opacity: 0; /* 最初は非表示 */
+      max-height: 0; /* 最初は高さ0 */
+      overflow: hidden;
+      transition: opacity 0.5s ease-out, max-height 0.5s ease-out; /* トランジションをゆっくりに */
+    }
+    .icon-menu-item.active span,
+    .icon-menu-item:hover span {
+      opacity: 1; /* アクティブ時とホバー時に表示 */
+      max-height: 20px; /* 文字の高さ */
+    }
+    .icon-menu-item.active i {
+      color: var(--active-color); /* アクティブ時のアイコン色 */
+    }
+  </style>
+</head>
+<body x-data="{
+    categories: [],
+    activeTab: 'All',
+    activeFilters: {},
+    isCategoryMenuOpen: false, /* カスタムカテゴリメニューの状態 */
+
+    init() {
+      fetch('../info/latest_topics.yaml')
+        .then(response => response.text())
+        .then(text => {
+          this.categories = jsyaml.load(text).categories;
+          // デフォルトのタブを最初のカテゴリに設定
+          if (this.categories.length > 0) {
+            this.activeTab = this.categories[0].name;
+          }
+          // フィルターの初期状態を設定
+          this.categories.forEach(cat => {
+            this.activeFilters[cat.name] = 'All';
+          });
+        });
+    },
+
+    getTagsForCategory(categoryName) {
+      const category = this.categories.find(c => c.name === categoryName);
+      if (!category || !category.topics) return [];
+      const purposes = category.topics.map(t => t.purpose);
+      return ['All', ...new Set(purposes)];
+    },
+
+    setFilter(categoryName, tag) {
+      this.activeFilters[categoryName] = tag;
+    },
+
+    filteredTopics(categoryName) {
+      const category = this.categories.find(c => c.name === categoryName);
+      const filter = this.activeFilters[categoryName];
+      if (!category || !category.topics) return [];
+      if (filter === 'All') {
+        return category.topics;
+      }
+      return category.topics.filter(topic => topic.purpose === filter);
+    },
+
+    getActiveTheme() {
+      const activeCategory = this.categories.find(c => c.name === this.activeTab);
+      return activeCategory ? activeCategory.theme : { main: '#4f46e5', bg: '#f1f5f9', hover: '#4338ca' };
+    },
+
+    changeTab(tab) {
+      this.activeTab = tab;
+      this.isCategoryMenuOpen = false; /* メニュー選択でポップアップを閉じる */
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }" class="transition-all" :style="{ backgroundColor: getActiveTheme().bg }">
+
+  <header class="sticky top-0 z-20 transition-all" :style="{ backgroundColor: getActiveTheme().bg }">
+    <div class="w-full max-w-4xl mx-auto px-4 sm:px-8 pt-6 sm:pt-8 flex justify-between items-center">
+      <h1 class="text-2xl sm:text-3xl font-bold text-shadow-soft" :style="{ color: getActiveTheme().main }">Tech Topics Cafe☕</h1>
+      <p class="text-sm text-gray-500">最終更新日: 2025-08-05</p>
+    </div>
+    
+    <div class="w-full max-w-4xl mx-auto px-4 sm:px-8">
+      <!-- PC用タブ (md以上で表示) -->
+      <nav class="hidden md:flex space-x-2" aria-label="Tabs">
+        <template x-for="category in categories" :key="category.name">
+          <button @click="changeTab(category.name)" 
+                  :class="activeTab === category.name ? 'text-white' : 'bg-gray-200 text-gray-500 hover:bg-gray-300'" /* 文字色を優しく */
+                  :style="activeTab === category.name ? { backgroundColor: category.theme.main, borderBottomColor: 'transparent' } : { borderBottomColor: getActiveTheme().main }"
+                  class="flex-1 text-center whitespace-nowrap py-3 px-5 rounded-t-lg font-medium text-sm transition-all border-b-2">
+            <span class="flex items-center justify-center">
+              <i :class="category.devicon" class="mr-2"></i>
+              <span x-text="category.name"></span>
+            </span>
+          </button>
+        </template>
+      </nav>
+
+      <!-- スマホ用アイコンメニュー (md未満で表示) -->
+      <div class="md:hidden icon-menu-container">
+        <template x-for="category in categories" :key="category.name">
+          <div class="icon-menu-item" 
+               :class="{ 'active': activeTab === category.name }"
+               :style="activeTab === category.name ? `--active-color: ${category.theme.main};` : ''"
+               @click="changeTab(category.name)">
+            <i :class="category.devicon"></i>
+            <span x-text="category.name"></span>
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="w-full max-w-4xl mx-auto px-4 sm:px-8 pb-8">
+    <div class="rounded-b-lg bg-white/70 backdrop-blur-sm border-2 p-4 sm:p-6 shadow-lg" :class="{ 'rounded-t-lg': window.innerWidth < 768, '-mt-[2px]': window.innerWidth >= 768 }" :style="{ borderColor: getActiveTheme().main }">
+      <template x-for="category in categories" :key="category.name">
+        <div x-show="activeTab === category.name" class="space-y-6">
+          <!-- Tag Filter Buttons -->
+          <div class="flex flex-wrap gap-2 pb-4 border-b" :style="{ borderColor: getActiveTheme().main }">
+            <template x-for="tag in getTagsForCategory(category.name)" :key="tag">
+              <button @click="setFilter(category.name, tag)"
+                      :class="activeFilters[category.name] === tag ? 'text-white' : 'text-gray-700 bg-gray-200 hover:bg-gray-300'" /* 文字色を優しく */
+                      :style="activeFilters[category.name] === tag ? { backgroundColor: category.theme.main } : {}"
+                      class="px-3 py-1 text-sm font-medium rounded-full transition-colors">
+                <span x-text="tag === 'All' ? 'すべてのタグ' : tag"></span>
+              </button>
+            </template>
+          </div>
+
+          <!-- Filtered Topics -->
+          <div class="space-y-4 pt-4">
+            <template x-for="topic in filteredTopics(category.name)" :key="topic.title">
+              <div class="bg-gray-50 p-4 rounded-lg flex flex-col h-full shadow-sm">
+                <div class="flex-grow">
+                  <h3 class="text-lg font-semibold mb-2 flex items-center">
+                    <i :class="topic.devicon" class="mr-2" :style="{ color: topic.color }"></i>
+                    <span x-text="topic.title"></span>
+                  </h3>
+                  <p class="text-gray-600 text-sm" x-text="topic.description"></p>
+                </div>
+                <div class="flex justify-between items-center mt-4 pt-4 border-t">
+                  <p class="text-xs text-gray-500">🗓️ 投稿日: <span x-text="topic.published_date"></span></p>
+                  <a :href="topic.url" target="_blank" class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white shadow-sm transition-colors"
+                     :style="{ backgroundColor: getActiveTheme().main, '--tw-bg-opacity': 1, color: 'white' }" 
+                     @mouseover="$el.style.backgroundColor = getActiveTheme().hover" 
+                     @mouseout="$el.style.backgroundColor = getActiveTheme().main">詳しく見る</a>
+                </div>
+              </div>
+            </template>
+            <div x-show="filteredTopics(category.name).length === 0" class="text-center py-8 text-gray-500">
+              <p>このタグに一致するトピックはありませんでした。</p>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </main>
+
+</body>
+</html>
