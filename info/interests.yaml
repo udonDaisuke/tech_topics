@@ -1,63 +1,113 @@
 keywords:
-  # CSS:
-  #   - keyword: basics
-  #     interests: []
-  #     item_num: 3
-  #   - keyword: TAILWINDCSS
-  #     interests: []
-  #     item_num: 3
   HTML:
-    - keyword: basics
+    - keyword: 公式ドキュメント
       interests: []
+      item_num: 1
+    - keyword: 最新フレームワークとトレンド
+      interests: [効果的な活用]
       item_num: 3
-    - keyword: TAILWINDCSS
+    - keyword: 構造デザインTips
       interests: []
       item_num: 3
   CSS:
-    - keyword: basics
-      interests: ["最新機能", "デザインシステム", "Tips"]
+    - keyword: デザインシステム
+      interests: []
+      item_num: 3
+    - keyword: トークン
+      interests: []
+      item_num: 3
+    - keyword: CSS新機能活用
+      interests: []
       item_num: 3
     - keyword: TAILWINDCSS
-      interests: ["最新機能", "デザインシステム"]
+      interests: []
       item_num: 3
-
   JavaScript:
     - keyword: basics
       interests: ["基礎"]
       item_num: 1
-    - keyword: FRAMEWORK
-      interests: [React、Next、Express]
-      item_num: 4
-    - keyword: TypeScript
-      interests: [基礎]
-      item_num: 1
-  PHP:
-    - keyword: basics
-      interests: ["基礎",環境設定]
+    - keyword: React
+      interests: []
+      item_num: 5
+    - keyword: Next
+      interests: []
       item_num: 2
-    - keyword: Laravel
-      interests: [基礎、設計、認証、モダン開発、テスト]
+    - keyword: Alpine
+      interests: []
+      item_num: 3
+    - keyword: Express
+      interests: []
+      item_num: 3
+  PHP:
+    - keyword: 基礎
+      interests: []
       item_num: 4
+    - keyword: デプロイ環境
+      interests: [設定、デプロイ]
+      item_num: 4
+    - keyword: Laravel
+      interests: []
+      item_num: 5
+    - keyword: Livewire
+      interests: []
+      item_num: 5
+    - keyword: 認証
+      interests: []
+      item_num: 3
   Python:
     - keyword: basics
       interests: [最新機能、効率]
       item_num: 3
     - keyword: Django
-      interests: [基礎、最新機能、テスト]
-      item_num: 3
+      interests: []
+      item_num: 4
     - keyword: FastAPI
-      interests: [基礎]
+      interests: []
+      item_num: 4
+    - keyword: Python Webフレームワーク
+      interests: []
       item_num: 3
   開発環境:
-    - keyword: Git
-      interests: [基礎、トラブルシュート、GithubAction]
-      item_num: 6
-    - keyword: Docker
-      interests: [基礎、WSL2、トラブルシュート]
+    - keyword: VSCode ショートカット
+      interests: []
+      item_num: 2
+    - keyword: VSCode 編集ノウハウ
+      interests: []
+      item_num: 3
+    - keyword: VSCode 拡張機能
+      interests: []
+      item_num: 3
+    - keyword: GitHub Actions 基礎
+      interests: []
       item_num: 5
-    - keyword: VSCODE
-      interests: [最新の便利な拡張機能]
+    - keyword: Docker 基礎から応用
+      interests: []
       item_num: 5
-  
-  
-  
+  ソフトウェアテスト:
+    - keyword: 単体テスト
+      interests: []
+      item_num: 1
+    - keyword: 結合テスト
+      interests: []
+      item_num: 1
+    - keyword: E2Eテスト
+      interests: []
+      item_num: 1
+    - keyword: テスト駆動開発 (TDD)
+      interests: []
+      item_num: 4
+  データベース:
+    - keyword: リレーショナルデータベース
+      interests: []
+      item_num: 5
+    - keyword: NoSQLデータベース
+      interests: []
+      item_num: 5
+  要件定義:
+    - keyword: 要件定義
+      interests: []
+      item_num: 3
+  設計戦略:
+    - keyword: 設計戦略
+      interests: []
+      item_num: 4

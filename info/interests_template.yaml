@@ -1,0 +1,63 @@
+keywords:
+  # CSS:
+  #   - keyword: basics
+  #     interests: []
+  #     item_num: 3
+  #   - keyword: TAILWINDCSS
+  #     interests: []
+  #     item_num: 3
+  HTML:
+    - keyword: basics
+      interests: []
+      item_num: 3
+    - keyword: TAILWINDCSS
+      interests: []
+      item_num: 3
+  CSS:
+    - keyword: basics
+      interests: ["最新機能", "デザインシステム", "Tips"]
+      item_num: 3
+    - keyword: TAILWINDCSS
+      interests: ["最新機能", "デザインシステム"]
+      item_num: 3
+
+  JavaScript:
+    - keyword: basics
+      interests: ["基礎"]
+      item_num: 1
+    - keyword: FRAMEWORK
+      interests: [React、Next、Express]
+      item_num: 4
+    - keyword: TypeScript
+      interests: [基礎]
+      item_num: 1
+  PHP:
+    - keyword: basics
+      interests: ["基礎",環境設定]
+      item_num: 2
+    - keyword: Laravel
+      interests: [基礎、設計、認証、モダン開発、テスト]
+      item_num: 4
+  Python:
+    - keyword: basics
+      interests: [最新機能、効率]
+      item_num: 3
+    - keyword: Django
+      interests: [基礎、最新機能、テスト]
+      item_num: 3
+    - keyword: FastAPI
+      interests: [基礎]
+      item_num: 3
+  開発環境:
+    - keyword: Git
+      interests: [基礎、トラブルシュート、GithubAction]
+      item_num: 6
+    - keyword: Docker
+      interests: [基礎、WSL2、トラブルシュート]
+      item_num: 5
+    - keyword: VSCODE
+      interests: [最新の便利な拡張機能]
+      item_num: 5
+  
+  
+  
