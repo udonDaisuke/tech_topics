@@ -265,7 +265,7 @@ categories:
         devicon: "devicon-mongodb-plain"
         color: "#47a248"
         purpose: "NoSQLデータベース"
-  - name: "ソフトウェアテスト"
+  - name: "テスト"
     devicon: "devicon-jest-plain"
     theme:
       main: "#99425b"
